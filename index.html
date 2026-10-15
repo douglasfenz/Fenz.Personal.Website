@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>FENZ</title>
+        <meta name="description" content="Portfólio de código científico: métodos numéricos, simulações e análise de dados, com ambiente reprodutível.">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='white'>∯</text></svg>">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;600;700&family=Adamina&display=swap" rel="stylesheet">
+        <style>
+            :root{
+                --noite:#F4F6F8; --grafite:#171B20; --aco:#2A3038;
+                --prata:#C8CDD3; --prata-claro:#F1F3F5; --prata-medio:#9AA2AB;
+                --teal:#00A19B; --teal-vivo:#2EE6D8;
+                --texto:#16191D; --suave:#5A626B;
+                --fonte:"Source Sans 3","Lucida Grande","Lucida Sans Unicode",system-ui,sans-serif;
+                --fontelogo:"Adamina",serif;
+                --mono:Menlo,Monaco,Consolas,"Courier New",monospace;
+                --escovado:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,rgba(0,0,0,.025) 1px 2px,transparent 2px 4px);
+                --metal:linear-gradient(#FFFFFF,#E6E9EC 49%,#C3C8CE 51%,#E9ECEF);
+                }
+            *{box-sizing:border-box;margin:0}
+            html{scroll-behavior:smooth;scroll-padding-top:46px}
+            ::-webkit-scrollbar{width:18px}
+            ::-webkit-scrollbar-track{background:linear-gradient(90deg,rgba(255,255,255,.55),rgba(214,220,226,.25));border-left:1px solid rgba(255,255,255,.8);box-shadow:inset 1px 0 3px rgba(60,75,90,.12)}
+            ::-webkit-scrollbar-thumb{border:4px solid transparent;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(165,176,187,.6)) padding-box;box-shadow:inset 0 0 0 1px rgba(95,108,121,.55),inset 0 1px 0 #fff}
+            ::-webkit-scrollbar-thumb:hover{background:linear-gradient(90deg,#fff,rgba(135,148,160,.75)) padding-box}
+            @supports not selector(::-webkit-scrollbar){html{scrollbar-color:rgba(130,142,154,.6) rgba(235,239,242,.6)}}
+            body{font-family:var(--fonte);color:var(--texto);background:#fff;font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+            a{color:inherit}
+            :focus-visible{outline:3px solid var(--teal-vivo);outline-offset:2px;border-radius:6px}
+            .wrap{width:min(1100px,100% - 2.5rem);margin-inline:auto}
+            .menu{position:fixed;top:0;left:0;right:0;z-index:10;background:linear-gradient(rgba(255,255,255,.78),rgba(222,228,233,.42) 50%,rgba(236,240,243,.5));-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid rgba(120,132,145,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 2px 14px rgba(40,55,70,.16)}
+            .menu .wrap{display:flex;justify-content:space-between;align-items:center;height:46px}
+            .marca {
+                font-family: var(--fontelogo);
+                font-weight: 700;
+                font-size: 1rem;
+                letter-spacing: .30em;
+                text-decoration: none;
+                color: #14181D;
+                text-shadow: 0 1px 0 #fff;
+                display: flex;
+                align-items: center;
+                }
+            .marca span {
+                font-size: 1.7rem;
+                }
+            .menu nav a{margin-left:1.5rem;font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#2A3139;text-shadow:0 1px 0 #fff}
+            .menu nav a:hover{color:var(--teal)}
+            .btn{position:relative;display:inline-block;padding:.75rem 1.8rem;border-radius:999px;font:600 .9rem var(--fonte);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;color:#fff;text-shadow:0 -1px 0 rgba(0,40,40,.6);background:linear-gradient(#35D3C8 0%,#00A8A0 49%,#008882 51%,#1FBDB3 100%);border:1px solid #00706B;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 2px 8px rgba(0,161,155,.45);transition:filter .15s,transform .15s}
+            .btn::after{content:"";position:absolute;left:5%;right:5%;top:2px;height:46%;border-radius:999px;background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,.05));pointer-events:none}
+            .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+            .btn.branco{color:#1A1F25;text-shadow:0 1px 0 #fff;background:var(--metal);border-color:#6F7883;box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(0,0,0,.35)}
+            .btn.branco::after{background:linear-gradient(rgba(255,255,255,.9),rgba(255,255,255,0))}
+            .hero{position:relative;overflow:hidden;min-height:100vh;min-height:100svh;display:flex;background:radial-gradient(ellipse at 75% 20%,#FFFFFF 0%,#F3F5F7 50%,#E1E5E9 100%);border-bottom:1px solid #BFC6CD}
+            .hero::before{content:"";position:absolute;inset:0;background:var(--escovado);pointer-events:none}
+            .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,white,transparent);box-shadow:0 0 18px 2px white}
+            .hero .wrap {
+                width: min(1100px, 100% - 2.5rem);
+                position: relative;
+                z-index: 2;
+                display: grid;
+                grid-template-columns: 1fr 1.05fr;
+                gap: 2.5rem;
+                align-items: center;
+                min-height: 100vh;
+                min-height: 100svh;
+                padding-block: 46px;
+                }
+            .hero h1{font-weight:200;font-size:clamp(2.5rem,5.2vw,4.4rem);line-height:1.05;letter-spacing:-.01em;color:#1A1F25;background:linear-gradient(#232A31,#7A858F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+            .hero .lead{margin-top:1.4rem;font-size:1.2rem;max-width:44ch;color:#4A525B}
+            .cta{display:flex;gap:.9rem;margin-top:2rem;flex-wrap:wrap}
+            .janela{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 18px 40px rgba(40,55,70,.28),0 0 0 1px rgba(70,80,92,.55)}
+            .barra{display:flex;align-items:center;gap:7px;height:30px;padding:0 11px;background:var(--escovado),linear-gradient(#F4F5F6,#D4D8DC 50%,#BFC4CA 51%,#CED2D7);border-bottom:1px solid #6B737D}
+            .luz{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.35);box-shadow:inset 0 1px 1px rgba(255,255,255,.8)}
+            .luz.v{background:radial-gradient(circle at 50% 25%,#FF9C94,#E0382B 70%)}
+            .luz.a{background:radial-gradient(circle at 50% 25%,#FFE79A,#E9A914 70%)}
+            .luz.g{background:radial-gradient(circle at 50% 25%,#B5F08C,#3FA320 70%)}
+            .titulo{flex:1;text-align:center;font-size:.82rem;font-weight:600;color:#30363D;text-shadow:0 1px 0 rgba(255,255,255,.8);margin-right:46px}
+            #grafico{display:block;width:100%;height:300px;background:#fff}
+            .controles{padding:.9rem 1.1rem 1rem;background:linear-gradient(#F8F9FA,#E2E6E9);border-top:1px solid #B9C0C7}
+            .formula{font-size:1.05rem;font-style:italic;color:#4A5560;letter-spacing:.03em}
+            section{padding-block:5.5rem}
+            h2{font-weight:200;font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.005em;color:#14181D;max-width:20ch;text-shadow:0 1px 0 #fff}
+            .intro{margin-top:1.1rem;color:var(--suave);max-width:58ch}
+            .catalogo{background:var(--escovado),linear-gradient(#F1F3F5,#DDE1E5)}
+            .seg{display:inline-flex;margin-top:2rem;flex-wrap:wrap;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+            .seg button{font:600 .85rem var(--fonte);letter-spacing:.06em;text-transform:uppercase;padding:.5rem 1.15rem;color:#2A3139;cursor:pointer;background:var(--metal);border:1px solid #6F7883;margin-left:-1px;text-shadow:0 1px 0 #fff}
+            .seg button:first-child{border-radius:8px 0 0 8px;margin-left:0}
+            .seg button:last-child{border-radius:0 8px 8px 0}
+            .seg button[aria-pressed="true"]{color:#fff;text-shadow:0 -1px 0 rgba(0,40,40,.6);background:linear-gradient(#35D3C8,#00A8A0 50%,#008882 51%,#1FBDB3);border-color:#00706B}
+            .janela.lista{margin-top:1.6rem}
+            .cab,.linha{display:grid;grid-template-columns:2.4fr 1.1fr .9fr .5fr;gap:1rem;align-items:start;padding:.65rem 1rem}
+            .cab{align-items:center;background:var(--metal);border-bottom:1px solid #6B737D;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#3A424B;padding-block:.45rem}
+            .corpo{background:#fff}
+            .linha{border-bottom:1px solid #E3E6E9;padding-block:1rem}
+            .linha:nth-child(even){background:#F1F3F5}
+            .linha h3{font-size:1.12rem;font-weight:600;line-height:1.2}
+            .linha h3 a{text-decoration:none}
+            .linha h3 a:hover{text-decoration:underline}
+            .linha p{font-size:.95rem;color:var(--suave);margin-top:.15rem}
+            .meta{display:block;margin-top:.4rem;font-size:.86rem;color:var(--suave)}
+            .meta a{color:#007F7A;font-weight:600}
+            .linha:hover,.linha:focus-within{background:linear-gradient(#EAFBF9,#CDF2EF);color:var(--texto)}
+            .linha:hover p,.linha:focus-within p,.linha:hover .meta,.linha:focus-within .meta{color:var(--suave)}
+            .linha:hover .meta a,.linha:focus-within .meta a{color:#007F7A}
+            .vazio{padding:1.6rem 1rem;color:var(--suave)}
+            footer{background:#E3E7EB;color:#5A626B;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;padding:1.3rem 0 2rem;border-top:1px solid #C3C9CF}
+            @media (max-width:880px){
+                .hero .wrap{grid-template-columns:1fr;padding-bottom:4rem}
+                .cab,.linha{grid-template-columns:1.8fr 1fr}
+                .cab span:nth-child(n+3),.linha .c-ano,.linha .c-lang{display:none}
+                .menu nav a:not(:last-child){display:none}
+                .prog-linha{grid-template-columns:90px 1fr 46px}
+                }
+            @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.enche{animation:none}*{transition:none!important}}
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="wrap">
+            <a class="marca" href="#"><span>∯</span> FENZ</a>
+            <nav aria-label="Principal">
+                <a href="#metodo">Login</a>
+                <a href="#projetos">Pesquisas</a>
+                <a href="#contato">Documentos</a>
+            </nav>
+        </div>
+    </div>
+    <main>
+        <div class="hero">
+            <div class="wrap">
+                <div>
+                    <h1>Código de pesquisa e documentos.</h1>
+                    <p class="lead">Códigos de pesquisas e documentos de ciências variáveis.</p>
+                    <div class="cta">
+                        <a class="btn" href="#projetos">Ver pesquisas</a>
+                        <a class="btn branco" href="#contato">Documentos</a>
+                    </div>
+                </div>
+                <div class="janela" role="group" aria-label="Grapher interativo">
+                    <div class="barra"><i class="luz v"></i><i class="luz a"></i><i class="luz g"></i><span class="titulo">Gráfico f(x)</span></div>
+                    <canvas id="grafico" role="img" aria-label="Gráfico da soma de duas ondas senoidais"></canvas>
+                    <div class="controles">
+                        <p class="formula">Análises estatísticas para a informação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="catalogo" id="projetos">
+            <div class="wrap">
+                <h2>Resultados das pesquisas</h2>
+                <p class="intro">Cada projeto possui um artigo com as informações retiradas do processamento de dados e seu código. As informações são livres para uso, desde que o autor seja devidamente citado.</p>
+                <div class="seg" id="filtros" role="group" aria-label="Filtrar por domínio"></div>
+                <div class="janela lista">
+                    <div class="barra"><i class="luz v"></i><i class="luz a"></i><i class="luz g"></i><span class="titulo" id="titulo-lista">Código de pesquisa</span></div>
+                    <div class="cab"><span>Nome</span><span>Domínio</span><span>Linguagem</span><span>Ano</span></div>
+                    <div class="corpo" id="lista"></div>
+                </div>
+            </div>
+        </section>
+        <footer><div class="wrap">© <span id="ano"></span> FENZ</div></footer>
+        <script>
+            const PROJETOS = [
+            {nome:"Análise de Riscos de NEOs", desc:"Análise de proximidade de Near-Earth Objects.", dominio:"Códigos de Pesquisa", lang:"Python", ano:2026, metodo:"<placeholder>", licenca:"<placeholder>", url:"https://github.com/seu-usuario/orbitas", artigo:"https://doi.org/10.0000/seu-artigo"},
+            {nome:"História da Arte", desc:"Artigos sobre a história da arte.", dominio:"História", lang:"Português", ano:2026, metodo:"<placeholder>", licenca:"<placeholder>", url:"https://github.com/seu-usuario/orbitas", artigo:"https://doi.org/10.0000/seu-artigo"}
+            ];
+            const $ = s => document.querySelector(s);
+            $('#ano').textContent = new Date().getFullYear();
+            const dominios = ['Todos', ...new Set(PROJETOS.map(p => p.dominio))];
+            let atual = 'Todos';
+            function listar(){
+                const f = $('#filtros'); f.innerHTML = '';
+                dominios.forEach(d => {
+                    const b = document.createElement('button');
+                    b.type = 'button'; b.textContent = d;
+                    b.setAttribute('aria-pressed', d === atual);
+                    b.onclick = () => { atual = d; listar(); };
+                    f.appendChild(b);
+                    });
+                const itens = PROJETOS.filter(p => atual === 'Todos' || p.dominio === atual);
+                $('#titulo-lista').textContent = `Código de pesquisa — ${itens.length} ${itens.length === 1 ? 'item' : 'itens'}`;
+                const l = $('#lista'); l.innerHTML = '';
+                if(!itens.length){ l.innerHTML = '<p class="vazio">Nenhum projeto neste domínio ainda.</p>'; return; }
+                itens.forEach(p => {
+                    const row = document.createElement('div');
+                    row.className = 'linha';
+                    row.innerHTML = '<div class="c-nome"><h3><a target="_blank" rel="noopener"></a></h3><p></p><small class="meta"></small></div><span class="c-dom"></span><span class="c-lang"></span><span class="c-ano"></span>';
+                    const a = row.querySelector('h3 a');
+                    a.href = p.url; a.textContent = p.nome;
+                    row.querySelector('p').textContent = p.desc;
+                    const meta = row.querySelector('.meta');
+                    meta.append(`Método: ${p.metodo} · Licença ${p.licenca}`);
+                    if(p.artigo){
+                        meta.append(' · ');
+                        const ar = document.createElement('a');
+                        ar.href = p.artigo; ar.target = '_blank'; ar.rel = 'noopener'; ar.textContent = 'Artigo';
+                        meta.appendChild(ar);
+                        }
+                    row.querySelector('.c-dom').textContent = p.dominio;
+                    row.querySelector('.c-lang').textContent = p.lang;
+                    row.querySelector('.c-ano').textContent = p.ano;
+                    l.appendChild(row);
+                    });
+                }
+            listar();
+            (function(){
+                const cv = document.querySelector('#grafico');
+                const g = cv.getContext('2d');
+                const a = 3, b = 5;
+                const P2 = Math.PI * 2;
+                const YM = 1.8;
+                let w, h, t = 0, ultimo = 0;
+                function ajustar(){
+                    const d = window.devicePixelRatio || 1;
+                    w = cv.clientWidth; h = cv.clientHeight;
+                    cv.width = w * d; cv.height = h * d;
+                    g.setTransform(d, 0, 0, d, 0, 0);
+                    }
+                function curva(f, cor, larg, alfa, tracejado = []){
+                    g.beginPath();
+                    for(let px = 0; px <= w; px += 2){
+                        const x = px / w * 2 * P2 - P2;
+                        const y = h / 2 - f(x) / YM * (h / 2);
+                        px ? g.lineTo(px, y) : g.moveTo(px, y);
+                        }
+                    g.setLineDash(tracejado);
+                    g.strokeStyle = cor; g.lineWidth = larg; g.globalAlpha = alfa; g.lineJoin = 'round';
+                    g.stroke();
+                    g.globalAlpha = 1; g.setLineDash([]);
+                    }
+                function desenhar(){
+                    const X = x => (x + P2) / (2 * P2) * w;
+                    const Y = y => h / 2 - y / YM * (h / 2);
+                    g.clearRect(0, 0, w, h);
+                    g.fillStyle = '#FFFFFF';
+                    g.fillRect(0, 0, w, h);
+                    for(let i = 0; i <= 16; i++){
+                        g.strokeStyle = i % 2 ? '#EAF0F4' : '#DCE5EC';
+                        g.lineWidth = 1;
+                        g.beginPath(); g.moveTo(i / 16 * w, 0); g.lineTo(i / 16 * w, h); g.stroke();
+                        }
+                    for(let y = -1.5; y <= 1.5; y += .5){
+                        g.strokeStyle = '#DCE5EC';
+                        g.beginPath(); g.moveTo(0, Y(y)); g.lineTo(w, Y(y)); g.stroke();
+                        }
+                    g.strokeStyle = '#6B7782'; g.lineWidth = 1.5;
+                    g.beginPath(); g.moveTo(0, Y(0)); g.lineTo(w, Y(0)); g.stroke();
+                    g.beginPath(); g.moveTo(X(0), 0); g.lineTo(X(0), h); g.stroke();
+                    g.fillStyle = '#4A5560';
+                    g.font = '600 12px "Source Sans 3", sans-serif';
+                    g.textAlign = 'center';
+                    [['−2π', -2], ['−π', -1], ['π', 1], ['2π', 2]]
+                    .forEach(([rotulo, k]) => g.fillText(rotulo, X(k * Math.PI), Y(0) + 16));
+                    curva(x => Math.sin(a * x + t), '#8F99A3', 1.5, .9, [5, 4]);
+                    curva(x => .5 * Math.sin(b * x - t), '#B3BAC1', 1.5, .9, [5, 4]);
+                    const soma = x => Math.sin(a * x + t) + .5 * Math.sin(b * x - t);
+                    curva(soma, '#00A19B', 10, .14);
+                    curva(soma, '#00A19B', 3, 1);
+                    }
+                function quadro(agora){
+                    if(ultimo){
+                        const dt = Math.min((agora - ultimo) / 1000, 0.05);
+                        t += dt * 1.5;
+                        }
+                    ultimo = agora;
+                    desenhar();
+                    requestAnimationFrame(quadro);
+                    }
+                window.addEventListener('resize', ajustar);
+                ajustar();
+                requestAnimationFrame(quadro);
+                })();
+    </script>
+</body>
+</html>
